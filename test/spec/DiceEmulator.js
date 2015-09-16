@@ -36,8 +36,8 @@
           });
         });
 
-        describe('Test Get element', function () {
-            it('Test get element returns target test element used in these tests', function () {
+        describe('Test Get element via id method', function () {
+            it('Test get element returns target element', function () {
                 var element = diceEmulator.getElementViaId(id);
                 assert.equal(element, targetElement);
             });
@@ -47,7 +47,32 @@
                     diceEmulator.getElementViaId('doesNotExist');
                 }, Error, /Could not locate target element with id: doesNotExist/);
             });
+        });
 
+        describe('Test createCanvas method', function () {
+            it('Test get element returns target element with correct settings', function () {
+                var canvas = diceEmulator.createCanvas(40, 60);
+                assert.isDefined(canvas);
+                assert.strictEqual(canvas.getAttribute('class'), 'diceCanvas');
+                assert.strictEqual(canvas.width, 40);
+                assert.strictEqual(canvas.height, 60);
+            });
+        });
+
+        describe('Test retrieveContext method', function () {
+            it('Test retrieve successful context', function () {
+                var diceCanvas = document.createElement('canvas');
+                var context = diceEmulator.retrieveContext(diceCanvas);
+                assert.isDefined(context);
+            });
+
+            it('Test retrieve unsuccessful context', function () {
+                assert.throw(function () {
+                    var diceCanvas = {'getContext': undefined};
+                    diceEmulator.retrieveContext(diceCanvas);
+                }, Error, /The canvas context is not supported in this browser/);
+
+            });
         });
     });
   });
