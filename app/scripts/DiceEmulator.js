@@ -31,9 +31,7 @@ DiceEmulator.prototype.animate = function() {
     var step = (function(draw, activeDice, canvasContext) {
         return function() {
             for (var i = 0; i < activeDice.length; i++) {
-                activeDice[i].dice.animate();
-                draw(canvasContext, activeDice[i].dice.pattern,
-                        activeDice[i].x, activeDice[i].y);
+                activeDice[i].dice.animate(canvasContext, activeDice[i].x, activeDice[i].y);
             }
             window.requestAnimationFrame(step);
 
@@ -41,18 +39,6 @@ DiceEmulator.prototype.animate = function() {
     })(this.draw, this.activeDice, this.canvasContext);
 
     window.requestAnimationFrame(step);
-};
-
-DiceEmulator.prototype.draw = function(context, pattern, x, y) {
-    context.clearRect(0, 0, 500, 500);
-    for (var i = 0; i < pattern.edges.length; i++) {
-        context.beginPath();
-        context.moveTo(x + pattern.nodes[pattern.edges[i][0]].x, y
-                + pattern.nodes[pattern.edges[i][0]].y);
-        context.lineTo(x + pattern.nodes[pattern.edges[i][1]].x, y
-                + pattern.nodes[pattern.edges[i][1]].y);
-        context.stroke();
-    }
 };
 
 DiceEmulator.prototype.retrieveContext = function(canvas) {

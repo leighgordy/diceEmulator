@@ -60,12 +60,66 @@ Dice.prototype.rotateX = function(angle) {
 };
 
 /**
- * Called by DiceEmulator
+ * Renders the next step in the animation by calculating its positioning and then drawing it to the canvas
+ * @param context : canvas context to be drawn to
+ * @param x
+ * @param y
  */
-Dice.prototype.animate = function(){
-    this.rotateZ(0.05);
-    this.rotateY(0.05);
-    this.rotateX(0.05);
+Dice.prototype.animate = function(context, x, y){
+    this.rotateZ(0.01);
+    this.rotateY(0.01);
+    this.rotateX(0.00);
+    this.draw(context, x, y);
+};
+
+/**
+ * Draws the dice onto the canvas at the given x, y coordinates
+ * @param context : canvas context to be drawn to
+ * @param x
+ * @param y
+ */
+Dice.prototype.draw = function(context, x, y){
+    
+    // sort display order 
+    this.pattern.sides.sort((function(dicePlugin){
+        return function(sideA, sideB){
+            var zIndexA = dicePlugin.averageSideZindex(sideA);
+            var zIndexB = dicePlugin.averageSideZindex(sideB);
+            return  zIndexA - zIndexB 
+        };
+    })(this))
+    
+    context.clearRect(0, 0, 500, 500);
+    for(var i =0; i < this.pattern.sides.length; i++){
+        context.beginPath();
+        var from = this.pattern.nodes[this.pattern.sides[i][0][0]];
+        var too = this.pattern.nodes[this.pattern.sides[i][0][1]];
+        context.moveTo(x + from.x, y + from.y);
+        context.lineTo(x + too.x, y + too.y);
+        for(var j =1; j < this.pattern.sides[i].length; j++){
+            var from = this.pattern.nodes[this.pattern.sides[i][j][0]];
+            var too = this.pattern.nodes[this.pattern.sides[i][j][1]];
+            context.lineTo(x + from.x, y + from.y);
+            context.lineTo(x + too.x, y + too.y);
+        }
+        context.strokeStyle = '#000';
+        context.stroke();
+        context.fillStyle="#FF0000";
+        context.fill();
+    } 
+};
+
+/**
+ * Returns an average zIndex for a side. This allows sides to be organized that sides that are further away are rendered first avoiding overlapping
+ */
+Dice.prototype.averageSideZindex = function(side){
+    var zIndex = 0;
+    for(var i =1; i < side.length; i++){
+        var from = this.pattern.nodes[side[i][0]].z;
+        var too = this.pattern.nodes[side[i][1]].z;
+        zIndex = zIndex + from + too;
+    }
+    return zIndex / ( side.length * 2);
 };
 
 /*
