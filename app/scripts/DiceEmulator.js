@@ -23,7 +23,7 @@ function DiceEmulator(id, options) {
         'x': 250,
         'y': 250
     });
-
+    
     this.animate();
 }
 

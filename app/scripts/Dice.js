@@ -33,6 +33,19 @@ Dice.prototype.rotateZ = function(angle) {
         this.pattern.nodes[n].x = x * cosT - y * sinT;
         this.pattern.nodes[n].y = y * cosT + x * sinT;
     }
+    
+    for (var l = 0; l < this.pattern.sides.length; l++) {
+        if(typeof this.pattern.sides[l].graphic !== "undefined" ){
+            for (var m = 0; m < this.pattern.sides[l].graphic.length; m++) {
+                for (var n = 0; n < this.pattern.sides[l].graphic[m].length; n++) {
+                    var x = this.pattern.sides[l].graphic[m][n].x;
+                    var y = this.pattern.sides[l].graphic[m][n].y;
+                    this.pattern.sides[l].graphic[m][n].x = x * cosT - y * sinT;
+                    this.pattern.sides[l].graphic[m][n].y = y * cosT + x * sinT;
+                }
+            }
+        }
+    }
 };
 
 Dice.prototype.rotateY = function(angle) {
@@ -45,6 +58,20 @@ Dice.prototype.rotateY = function(angle) {
         this.pattern.nodes[n].x = x * cosT - z * sinT;
         this.pattern.nodes[n].z = z * cosT + x * sinT;
     }
+    
+    for (var l = 0; l < this.pattern.sides.length; l++) {
+        if(typeof this.pattern.sides[l].graphic !== "undefined" ){
+            for (var m = 0; m < this.pattern.sides[l].graphic.length; m++) {
+                for (var n = 0; n < this.pattern.sides[l].graphic[m].length; n++) {
+                    var x = this.pattern.sides[l].graphic[m][n].x;
+                    var z = this.pattern.sides[l].graphic[m][n].z;
+                    this.pattern.sides[l].graphic[m][n].x = x * cosT - z * sinT;
+                    this.pattern.sides[l].graphic[m][n].z = z * cosT + x * sinT;
+                }
+            }
+        }
+    }
+   
 };
 
 Dice.prototype.rotateX = function(angle) {
@@ -57,6 +84,19 @@ Dice.prototype.rotateX = function(angle) {
         this.pattern.nodes[n].y = y * cosT - z * sinT;
         this.pattern.nodes[n].z = z * cosT + y * sinT;
     }
+    
+    for (var l = 0; l < this.pattern.sides.length; l++) {
+        if(typeof this.pattern.sides[l].graphic !== "undefined" ){
+            for (var m = 0; m < this.pattern.sides[l].graphic.length; m++) {
+                for (var n = 0; n < this.pattern.sides[l].graphic[m].length; n++) {
+                    var y = this.pattern.sides[l].graphic[m][n].y;
+                    var z = this.pattern.sides[l].graphic[m][n].z;
+                    this.pattern.sides[l].graphic[m][n].y = y * cosT - z * sinT;
+                    this.pattern.sides[l].graphic[m][n].z = z * cosT + y * sinT;
+                }
+            }
+        }
+    }
 };
 
 /**
@@ -66,9 +106,9 @@ Dice.prototype.rotateX = function(angle) {
  * @param y
  */
 Dice.prototype.animate = function(context, x, y){
-    this.rotateZ(0.01);
-    this.rotateY(0.01);
-    this.rotateX(0.00);
+    this.rotateZ(-0.01);
+    this.rotateY(0.02);
+    this.rotateX(0.03);
     this.draw(context, x, y);
 };
 
@@ -83,30 +123,50 @@ Dice.prototype.draw = function(context, x, y){
     // sort display order 
     this.pattern.sides.sort((function(dicePlugin){
         return function(sideA, sideB){
-            var zIndexA = dicePlugin.averageSideZindex(sideA);
-            var zIndexB = dicePlugin.averageSideZindex(sideB);
+            var zIndexA = dicePlugin.averageSideZindex(sideA.side);
+            var zIndexB = dicePlugin.averageSideZindex(sideB.side);
             return  zIndexA - zIndexB 
         };
     })(this))
     
     context.clearRect(0, 0, 500, 500);
     for(var i =0; i < this.pattern.sides.length; i++){
+        
         context.beginPath();
-        var from = this.pattern.nodes[this.pattern.sides[i][0][0]];
-        var too = this.pattern.nodes[this.pattern.sides[i][0][1]];
+        var from = this.pattern.nodes[this.pattern.sides[i].side[0][0]];
+        var too = this.pattern.nodes[this.pattern.sides[i].side[0][1]];
         context.moveTo(x + from.x, y + from.y);
         context.lineTo(x + too.x, y + too.y);
-        for(var j =1; j < this.pattern.sides[i].length; j++){
-            var from = this.pattern.nodes[this.pattern.sides[i][j][0]];
-            var too = this.pattern.nodes[this.pattern.sides[i][j][1]];
+        for(var j =1; j < this.pattern.sides[i].side.length; j++){
+            var from = this.pattern.nodes[this.pattern.sides[i].side[j][0]];
+            var too = this.pattern.nodes[this.pattern.sides[i].side[j][1]];
             context.lineTo(x + from.x, y + from.y);
             context.lineTo(x + too.x, y + too.y);
         }
         context.strokeStyle = '#000';
         context.stroke();
-        context.fillStyle="#FF0000";
+        context.fillStyle=this.pattern.sides[i].color;
         context.fill();
+        
+        if(typeof this.pattern.sides[i].graphic !== "undefined" ){
+            for(var k =0; k < this.pattern.sides[i].graphic.length; k++){
+                context.beginPath();
+                var sideGraphic = this.pattern.sides[i].graphic[k];
+                
+                context.moveTo(x + sideGraphic[0].x, y + sideGraphic[0].y);
+                for(var j =1; j < sideGraphic.length; j++){
+                    context.lineTo(x + sideGraphic[j].x, y + sideGraphic[j].y);
+                }
+                context.lineTo(x + sideGraphic[0].x, y + sideGraphic[0].y);
+                context.strokeStyle = '#000';
+                context.stroke();
+                context.fillStyle='#fff';
+                context.fill();
+            }
+        }
+        
     } 
+    
 };
 
 /**
