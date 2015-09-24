@@ -3,42 +3,186 @@
 function DiceEmulator(id, options) {
 
     this.activeDice = [];
-
+    this.animationRequest = null;
     var defaults = {
-        'canvasDefaultHeight': 500,
-        'canvasDefaultWidth': 500
+        'introImage': 'images/dice.jpg',
+        'introText': "Welcome to Dice Emulator 0.1",
+        'canvasDefaultHeight': 500
     };
 
     this.settings = this.extend(defaults, options);
 
+    this.init(id);
+
+    this.adjustForCanvasResize();
+}
+
+DiceEmulator.prototype.init = function(id){
     // setup
     this.target = this.getElementViaId(id);
-    this.canvas = this.createCanvas(this.settings.canvasDefaultWidth,
+    var parentWidth = this.target.offsetWidth;
+    this.canvas = this.createCanvas(parentWidth,
             this.settings.canvasDefaultHeight);
     this.target.appendChild(this.canvas);
     this.canvasContext = this.retrieveContext(this.canvas);
-    var dice = new DiceSixSided();
-    this.activeDice.push({
-        'dice': dice,
-        'x': 250,
-        'y': 250
-    });
     
-    this.animate();
+    window.onresize = (function(diceEmulator){
+        return function(){
+            diceEmulator.adjustForCanvasResize();
+        };
+    })(this);
 }
 
+/**
+ * Factory method used to add dice of type format to the dice collection
+ * @param format
+ */
+DiceEmulator.prototype.addDice = function(format){
+    var dice = null;
+    switch (format) {
+    case 2:
+        dice = null;
+        break;
+    case 4:
+        dice = null;
+        break;
+    case 6:
+        dice = new DiceSixSided();
+        break;
+    case 8:
+        dice = null;
+        break;
+    case 10:
+        dice = null;
+        break;
+    case 12:
+        dice = null;
+        break;
+    case 20:
+        dice = null;
+        break;
+    }
+    if(dice !== null){
+        this.activeDice.push({
+            'dice': dice,
+            'x': 0,
+            'y': 0
+        });
+        this. updateDicePositioning();
+        if(this.animationRequest === null){
+            this.animate();
+        }
+    }
+    else{
+        if(this.activeDice.length ===0){
+            this.splashScreen();
+        }
+        alert(format + ' sided dice not supported yet!');
+    }
+}
+
+/**
+ * remove last dice that was added
+ */
+DiceEmulator.prototype.updateDicePositioning = function(){
+    
+    
+    if(this.activeDice.length > 0){
+        var row = 0;
+        var col = 0;
+        var xOffSet = 85;
+        var yOffSet = 100;
+        
+        var positionsX = Math.floor((this.canvas.width - xOffSet) / 175); 
+        for(var i = 0; i < this.activeDice.length; i++){
+            this.activeDice[i].x = xOffSet + (175 * col);
+            this.activeDice[i].y = yOffSet + (row * 175);
+            if(positionsX === col){
+                row++;
+                col=0;
+            }
+            else{
+                col++;
+            }
+        }
+        console.log(row);
+        var newHeight = 200 + (200 * row );
+        this.canvas.height = newHeight > this.settings.canvasDefaultHeight ? newHeight : this.settings.canvasDefaultHeight;
+    }
+
+    
+}
+
+/**
+ * remove last dice that was added
+ */ 
+DiceEmulator.prototype.removeDice = function(){
+    if(this.activeDice.length > 0){
+        this.activeDice.pop();
+        if(this.activeDice.length === 0){
+            this.splashScreen();
+        }
+        else{
+            this. updateDicePositioning();
+        }
+    }
+}
+
+DiceEmulator.prototype.adjustForCanvasResize = function(){
+    var parentWidth = this.target.offsetWidth;
+    this.canvas.width = parentWidth;
+    this.splashScreen();
+}
+
+/**
+ * Intro Screen used by dice emulator
+ */
+DiceEmulator.prototype.splashScreen = function() {
+    this.cancelAnimation();
+    var img = new Image();
+    img.onload = (function(diceEmulator){
+            return function(){
+                diceEmulator.canvasContext.clearRect(0, 0, diceEmulator.canvas.width, diceEmulator.canvas.height);
+                var width =  diceEmulator.canvas.width;
+                var height = diceEmulator.canvas.height;
+                
+                var imageX = (width - img.width)/2;
+                var imageY = (height - img.height)/3;
+                
+                diceEmulator.canvasContext.drawImage(img,imageX, imageY);
+                
+                var textY = imageY + img.height + 60;
+                var textX = width /2;
+                diceEmulator.canvasContext.fillStyle = '#000';
+                diceEmulator.canvasContext.textAlign = 'center';
+                diceEmulator.canvasContext.font = "30px Arial";
+                diceEmulator.canvasContext.fillText(diceEmulator.settings.introText,textX,textY);
+            };
+    })(this);
+    img.src = this.settings.introImage;
+
+}
+
+DiceEmulator.prototype.cancelAnimation = function() {
+    if(this.animationRequest !== null){
+        window.cancelAnimationFrame(this.animationRequest);
+        this.animationRequest = null;
+    }
+};
+
 DiceEmulator.prototype.animate = function() {
-    var step = (function(draw, activeDice, canvasContext) {
+    var step = (function(draw, activeDice, canvasContext, canvas) {
         return function() {
+            canvasContext.clearRect(0, 0, canvas.width, canvas.height, diceEmulator);
             for (var i = 0; i < activeDice.length; i++) {
                 activeDice[i].dice.animate(canvasContext, activeDice[i].x, activeDice[i].y);
             }
-            window.requestAnimationFrame(step);
+            diceEmulator.animationRequest = window.requestAnimationFrame(step);
 
         };
-    })(this.draw, this.activeDice, this.canvasContext);
+    })(this.draw, this.activeDice, this.canvasContext, this.canvas, this);
 
-    window.requestAnimationFrame(step);
+    this.animationRequest = window.requestAnimationFrame(step);
 };
 
 DiceEmulator.prototype.retrieveContext = function(canvas) {

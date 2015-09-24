@@ -18,10 +18,6 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
     
-    <!-- build:css styles/DiceEmulator.css -->
-    <link rel="stylesheet" href="styles/DiceEmulator.css">
-    <!-- endbuild -->
-    
     <!-- build:js scripts/vendor/modernizr.js -->
     <script src="/bower_components/modernizr/modernizr.js"></script>
     <!-- endbuild -->
@@ -39,10 +35,20 @@
       </div>
       </header>
       <div id="demoOptions">
-      
+      <div id="demoDice">
+      <button onclick="diceEmulator.addDice(2);">Coin D2</button>
+      <button onclick="diceEmulator.addDice(4);">Add D4</button>
+      <button onclick="diceEmulator.addDice(6);">Add D6</button>
+      <button onclick="diceEmulator.addDice(8);">Add D8</button>
+      <button onclick="diceEmulator.addDice(10);">Add D10</button>
+      <button onclick="diceEmulator.addDice(12);">Add D12</button>
+      <button onclick="diceEmulator.addDice(20);">Add D20</button>
+      </div>
+      <div id="demoCrud">
+      <button onclick="diceEmulator.removeDice();">Remove Dice</button><button>ROLL!!!!</button>
+      </div>
       </div>
       <div id="demo">
-      
       </div>
 	  <footer>
       <div class="footer">

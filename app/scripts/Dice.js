@@ -129,7 +129,6 @@ Dice.prototype.draw = function(context, x, y){
         };
     })(this))
     
-    context.clearRect(0, 0, 500, 500);
     for(var i =0; i < this.pattern.sides.length; i++){
         
         context.beginPath();
