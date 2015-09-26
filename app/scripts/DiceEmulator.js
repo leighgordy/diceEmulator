@@ -85,18 +85,14 @@ DiceEmulator.prototype.addDice = function(format){
  * remove last dice that was added
  */
 DiceEmulator.prototype.updateDicePositioning = function(){
-    
-    
     if(this.activeDice.length > 0){
         var row = 0;
-        var col = 0;
+        var col = -1;
         var xOffSet = 85;
         var yOffSet = 100;
         
         var positionsX = Math.floor((this.canvas.width - xOffSet) / 175); 
         for(var i = 0; i < this.activeDice.length; i++){
-            this.activeDice[i].x = xOffSet + (175 * col);
-            this.activeDice[i].y = yOffSet + (row * 175);
             if(positionsX === col){
                 row++;
                 col=0;
@@ -104,13 +100,14 @@ DiceEmulator.prototype.updateDicePositioning = function(){
             else{
                 col++;
             }
+            
+            this.activeDice[i].x = xOffSet + (175 * col);
+            this.activeDice[i].y = yOffSet + (row * 175);
         }
         console.log(row);
         var newHeight = 200 + (200 * row );
         this.canvas.height = newHeight > this.settings.canvasDefaultHeight ? newHeight : this.settings.canvasDefaultHeight;
     }
-
-    
 }
 
 /**
