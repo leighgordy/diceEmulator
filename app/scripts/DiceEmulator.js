@@ -104,7 +104,6 @@ DiceEmulator.prototype.updateDicePositioning = function(){
             this.activeDice[i].x = xOffSet + (175 * col);
             this.activeDice[i].y = yOffSet + (row * 175);
         }
-        console.log(row);
         var newHeight = 200 + (200 * row );
         this.canvas.height = newHeight > this.settings.canvasDefaultHeight ? newHeight : this.settings.canvasDefaultHeight;
     }
@@ -181,6 +180,13 @@ DiceEmulator.prototype.animate = function() {
 
     this.animationRequest = window.requestAnimationFrame(step);
 };
+
+
+DiceEmulator.prototype.roll = function(){
+    for(var i = 0; i < this.activeDice.length; i++){
+        this.activeDice[i].dice.roll();
+    }
+}
 
 DiceEmulator.prototype.retrieveContext = function(canvas) {
     if (canvas.getContext) {

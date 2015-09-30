@@ -39,7 +39,8 @@ function DiceSixSided() {
         'sides' : [ {
             'id' : '1',
             'color' : 'red',
-            'side' : [ [ 1, 3 ], [ 5, 7 ], [ 1, 5 ], [ 3, 7 ] ],
+            'show'  :{x: 0, y: 0, z: 0},
+            'edges' : [ [ 1, 3 ], [ 5, 7 ], [ 1, 5 ], [ 3, 7 ] ],
             'graphic' : [ [ {
                 x : 7,
                 y : -7,
@@ -60,7 +61,8 @@ function DiceSixSided() {
         }, {
             'id' : '2',
             'color' : 'red',
-            'side' : [ [ 3, 2 ], [ 3, 7 ], [ 6, 7 ], [ 6, 2 ] ],
+            'show'  :{x: 90, y: 0, z: 0},
+            'edges' : [ [ 3, 2 ], [ 3, 7 ], [ 6, 7 ], [ 6, 2 ] ],
             'graphic' : [ [ {
                 x : 45,
                 y : 50,
@@ -97,7 +99,8 @@ function DiceSixSided() {
         }, {
             'id' : '3',
             'color' : 'red',
-            'side' : [ [ 0, 1 ], [ 1, 3 ], [ 3, 2 ], [ 2, 0 ] ],
+            'show'  :{x: 0, y: 270, z: 0},
+            'edges' : [ [ 0, 1 ], [ 1, 3 ], [ 3, 2 ], [ 2, 0 ] ],
             'graphic' : [ [ {
                 x : -50,
                 y : -45,
@@ -150,7 +153,8 @@ function DiceSixSided() {
         },{
             'id' : '4',
             'color' : 'red',
-            'side' : [ [ 4, 5 ], [ 5, 7 ], [ 7, 6 ], [ 6, 4 ] ],
+            'show'  :{x: 90, y: 90, z: 90},
+            'edges' : [ [ 4, 5 ], [ 5, 7 ], [ 7, 6 ], [ 6, 4 ] ],
             'graphic' : [ [ {
                 x : 50,
                 y : 45,
@@ -221,7 +225,8 @@ function DiceSixSided() {
         }, {
             'id' : '5',
             'color' : 'red',
-            'side' : [ [ 0, 1 ], [ 4, 5 ], [ 0, 4 ], [ 1, 5 ] ],
+            'show'  :{x: 270, y: 0, z: 0},
+            'edges' : [ [ 0, 1 ], [ 4, 5 ], [ 0, 4 ], [ 1, 5 ] ],
             'graphic' : [ [ {
                 x : 7,
                 y : -50,
@@ -308,7 +313,8 @@ function DiceSixSided() {
         }, {
             'id' : '6',
             'color' : 'red',
-            'side' : [ [ 0, 2 ], [ 0, 4 ], [ 6, 4 ], [ 6, 2 ] ],
+            'show'  :{x: 180, y: 0, z: 0},
+            'edges' : [ [ 0, 2 ], [ 0, 4 ], [ 6, 4 ], [ 6, 2 ] ],
             'graphic' : [ [ {
                 x : 45,
                 y : 45,
