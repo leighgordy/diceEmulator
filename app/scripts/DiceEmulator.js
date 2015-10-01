@@ -41,10 +41,10 @@ DiceEmulator.prototype.addDice = function(format){
     var dice = null;
     switch (format) {
     case 2:
-        dice = null;
+        dice = new Coin();
         break;
     case 4:
-        dice = null;
+        dice = new DiceFourSided();
         break;
     case 6:
         dice = new DiceSixSided();

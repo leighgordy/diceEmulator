@@ -8,7 +8,7 @@ function Dice(customPattern) {
     
     // constants
     this.DICE_SPEED = 10;
-    this.MAX_DURATION = 500;
+    this.MAX_DURATION = 300;
     
     this.active = false;
     
@@ -28,17 +28,18 @@ function Dice(customPattern) {
         'edges': [ [ 0, 1 ] ]
     };
     
-    if(customPattern !== undefined){
-        this.originalPattern = JSON.parse(JSON.stringify(customPattern));
-    }
     this.pattern = this.extend(defaultPattern, customPattern);
-    
-    // anchor is used to reset the pattern to its default state
-    this.anchor = {
-        x:this.pattern.nodes[0].x,
-        y:this.pattern.nodes[0].y,
-        z:this.pattern.nodes[0].z
+
+    if(customPattern !== undefined){
+        this.resetInitialiseDice();
     }
+    
+}
+
+// used to setup and reset the dice 
+Dice.prototype.resetInitialiseDice = function(angle) {
+    this.activeSides = JSON.parse(JSON.stringify(this.pattern.sides));
+    this.activeNodes = JSON.parse(JSON.stringify(this.pattern.nodes));
 }
 
 Dice.prototype.rotateZ = function(angle) {
@@ -48,21 +49,21 @@ Dice.prototype.rotateZ = function(angle) {
     var sinT = Math.sin(radians);
     var cosT = Math.cos(radians);
 
-    for (var n = 0; n < this.pattern.nodes.length; n++) {
-        var x = this.pattern.nodes[n].x;
-        var y = this.pattern.nodes[n].y;
-        this.pattern.nodes[n].x = x * cosT - y * sinT;
-        this.pattern.nodes[n].y = y * cosT + x * sinT;
+    for (var n = 0; n < this.activeNodes.length; n++) {
+        var x = this.activeNodes[n].x;
+        var y = this.activeNodes[n].y;
+        this.activeNodes[n].x = x * cosT - y * sinT;
+        this.activeNodes[n].y = y * cosT + x * sinT;
     }
     
-    for (var l = 0; l < this.pattern.sides.length; l++) {
-        if(typeof this.pattern.sides[l].graphic !== "undefined" ){
-            for (var m = 0; m < this.pattern.sides[l].graphic.length; m++) {
-                for (var n = 0; n < this.pattern.sides[l].graphic[m].length; n++) {
-                    var x = this.pattern.sides[l].graphic[m][n].x;
-                    var y = this.pattern.sides[l].graphic[m][n].y;
-                    this.pattern.sides[l].graphic[m][n].x = x * cosT - y * sinT;
-                    this.pattern.sides[l].graphic[m][n].y = y * cosT + x * sinT;
+    for (var l = 0; l < this.activeSides.length; l++) {
+        if(typeof this.activeSides[l].graphic !== "undefined" ){
+            for (var m = 0; m < this.activeSides[l].graphic.length; m++) {
+                for (var n = 0; n < this.activeSides[l].graphic[m].length; n++) {
+                    var x = this.activeSides[l].graphic[m][n].x;
+                    var y = this.activeSides[l].graphic[m][n].y;
+                    this.activeSides[l].graphic[m][n].x = x * cosT - y * sinT;
+                    this.activeSides[l].graphic[m][n].y = y * cosT + x * sinT;
                 }
             }
         }
@@ -75,21 +76,21 @@ Dice.prototype.rotateY = function(angle) {
     var sinT = Math.sin(radians);
     var cosT = Math.cos(radians);
 
-    for (var n = 0; n < this.pattern.nodes.length; n++) {
-        var x = this.pattern.nodes[n].x;
-        var z = this.pattern.nodes[n].z;
-        this.pattern.nodes[n].x = x * cosT - z * sinT;
-        this.pattern.nodes[n].z = z * cosT + x * sinT;
+    for (var n = 0; n < this.activeNodes.length; n++) {
+        var x = this.activeNodes[n].x;
+        var z = this.activeNodes[n].z;
+        this.activeNodes[n].x = x * cosT - z * sinT;
+        this.activeNodes[n].z = z * cosT + x * sinT;
     }
     
-    for (var l = 0; l < this.pattern.sides.length; l++) {
-        if(typeof this.pattern.sides[l].graphic !== "undefined" ){
-            for (var m = 0; m < this.pattern.sides[l].graphic.length; m++) {
-                for (var n = 0; n < this.pattern.sides[l].graphic[m].length; n++) {
-                    var x = this.pattern.sides[l].graphic[m][n].x;
-                    var z = this.pattern.sides[l].graphic[m][n].z;
-                    this.pattern.sides[l].graphic[m][n].x = x * cosT - z * sinT;
-                    this.pattern.sides[l].graphic[m][n].z = z * cosT + x * sinT;
+    for (var l = 0; l < this.activeSides.length; l++) {
+        if(typeof this.activeSides[l].graphic !== "undefined" ){
+            for (var m = 0; m < this.activeSides[l].graphic.length; m++) {
+                for (var n = 0; n < this.activeSides[l].graphic[m].length; n++) {
+                    var x = this.activeSides[l].graphic[m][n].x;
+                    var z = this.activeSides[l].graphic[m][n].z;
+                    this.activeSides[l].graphic[m][n].x = x * cosT - z * sinT;
+                    this.activeSides[l].graphic[m][n].z = z * cosT + x * sinT;
                 }
             }
         }
@@ -103,21 +104,21 @@ Dice.prototype.rotateX = function(angle) {
     var sinT = Math.sin(radians);
     var cosT = Math.cos(radians);
 
-    for (var n = 0; n < this.pattern.nodes.length; n++) {
-        var y = this.pattern.nodes[n].y;
-        var z = this.pattern.nodes[n].z;
-        this.pattern.nodes[n].y = y * cosT - z * sinT;
-        this.pattern.nodes[n].z = z * cosT + y * sinT;
+    for (var n = 0; n < this.activeNodes.length; n++) {
+        var y = this.activeNodes[n].y;
+        var z = this.activeNodes[n].z;
+        this.activeNodes[n].y = y * cosT - z * sinT;
+        this.activeNodes[n].z = z * cosT + y * sinT;
     }
     
-    for (var l = 0; l < this.pattern.sides.length; l++) {
-        if(typeof this.pattern.sides[l].graphic !== "undefined" ){
-            for (var m = 0; m < this.pattern.sides[l].graphic.length; m++) {
-                for (var n = 0; n < this.pattern.sides[l].graphic[m].length; n++) {
-                    var y = this.pattern.sides[l].graphic[m][n].y;
-                    var z = this.pattern.sides[l].graphic[m][n].z;
-                    this.pattern.sides[l].graphic[m][n].y = y * cosT - z * sinT;
-                    this.pattern.sides[l].graphic[m][n].z = z * cosT + y * sinT;
+    for (var l = 0; l < this.activeSides.length; l++) {
+        if(typeof this.activeSides[l].graphic !== "undefined" ){
+            for (var m = 0; m < this.activeSides[l].graphic.length; m++) {
+                for (var n = 0; n < this.activeSides[l].graphic[m].length; n++) {
+                    var y = this.activeSides[l].graphic[m][n].y;
+                    var z = this.activeSides[l].graphic[m][n].z;
+                    this.activeSides[l].graphic[m][n].y = y * cosT - z * sinT;
+                    this.activeSides[l].graphic[m][n].z = z * cosT + y * sinT;
                 }
             }
         }
@@ -168,20 +169,26 @@ Dice.prototype.animate = function(context, x, y){
 
 Dice.prototype.showSide = function(){
     var sideId =this.mostVisibleSide();
-    this.pattern = JSON.parse(JSON.stringify(this.originalPattern));
+    console.log(sideId);
+    this.resetInitialiseDice();
     
-    for(var i = 0; i < this.pattern.sides.length; i++){
-        if(this.pattern.sides[i].id === sideId){
-            this.rotateX(this.pattern.sides[i].show.x);
-            this.rotateY(this.pattern.sides[i].show.y);
-            this.rotateZ(this.pattern.sides[i].show.z);
+    for(var i = 0; i < this.activeSides.length; i++){
+        if(this.activeSides[i].id === sideId){
+            this.rotateX(this.activeSides[i].show.x);
+            this.rotateY(this.activeSides[i].show.y);
+            this.rotateZ(this.activeSides[i].show.z);
             break;
         }
     }
 }
 
 Dice.prototype.mostVisibleSide = function(){
-    return this.pattern.sides[this.pattern.sides.length-1].id;
+    if(this.activeSides.length === 0){
+        return 0;
+    }
+    else{
+        return this.activeSides[this.activeSides.length-1].id;
+    }
 }
 
 /**
@@ -193,7 +200,7 @@ Dice.prototype.mostVisibleSide = function(){
 Dice.prototype.draw = function(context, x, y){
     
     // sort display order 
-    this.pattern.sides.sort((function(dicePlugin){
+    this.activeSides.sort((function(dicePlugin){
         return function(sideA, sideB){
             var zIndexA = dicePlugin.averageSideZindex(sideA.edges);
             var zIndexB = dicePlugin.averageSideZindex(sideB.edges);
@@ -201,28 +208,28 @@ Dice.prototype.draw = function(context, x, y){
         };
     })(this))
     
-    for(var i =0; i < this.pattern.sides.length; i++){
+    for(var i =0; i < this.activeSides.length; i++){
         
         context.beginPath();
-        var from = this.pattern.nodes[this.pattern.sides[i].edges[0][0]];
-        var too = this.pattern.nodes[this.pattern.sides[i].edges[0][1]];
+        var from = this.activeNodes[this.activeSides[i].edges[0][0]];
+        var too = this.activeNodes[this.activeSides[i].edges[0][1]];
         context.moveTo(x + from.x, y + from.y);
         context.lineTo(x + too.x, y + too.y);
-        for(var j =1; j < this.pattern.sides[i].edges.length; j++){
-            var from = this.pattern.nodes[this.pattern.sides[i].edges[j][0]];
-            var too = this.pattern.nodes[this.pattern.sides[i].edges[j][1]];
+        for(var j =1; j < this.activeSides[i].edges.length; j++){
+            var from = this.activeNodes[this.activeSides[i].edges[j][0]];
+            var too = this.activeNodes[this.activeSides[i].edges[j][1]];
             context.lineTo(x + from.x, y + from.y);
             context.lineTo(x + too.x, y + too.y);
         }
         context.strokeStyle = '#000';
         context.stroke();
-        context.fillStyle=this.pattern.sides[i].color;
+        context.fillStyle=this.activeSides[i].color;
         context.fill();
         
-        if(typeof this.pattern.sides[i].graphic !== "undefined" ){
-            for(var k =0; k < this.pattern.sides[i].graphic.length; k++){
+        if(typeof this.activeSides[i].graphic !== "undefined" ){
+            for(var k =0; k < this.activeSides[i].graphic.length; k++){
                 context.beginPath();
-                var sideGraphic = this.pattern.sides[i].graphic[k];
+                var sideGraphic = this.activeSides[i].graphic[k];
                 
                 context.moveTo(x + sideGraphic[0].x, y + sideGraphic[0].y);
                 for(var j =1; j < sideGraphic.length; j++){
@@ -238,7 +245,22 @@ Dice.prototype.draw = function(context, x, y){
         
     } 
     
+    
+    for(var l = 0; l < this.activeNodes.length; l++){
+        context.fillStyle='blue';
+        context.fillRect(x +this.activeNodes[l].x,y +this.activeNodes[l].y, 5, 5);
+        this.writeLabel(context, x +this.activeNodes[l].x, y +this.activeNodes[l].y, "node-"+l);
+    }
+    
+    
+    
 };
+
+Dice.prototype.writeLabel = function (context, x, y, text){
+    context.font = "12px Arial";
+    context.fillStyle = "red";
+    context.fillText(text, x, y);
+}
 
 /**
  * Returns an average zIndex for a side. This allows sides to be organized that sides that are further away are rendered first avoiding overlapping
@@ -246,8 +268,8 @@ Dice.prototype.draw = function(context, x, y){
 Dice.prototype.averageSideZindex = function(edges){
     var zIndex = 0;
     for(var i =1; i < edges.length; i++){
-        var from = this.pattern.nodes[edges[i][0]].z;
-        var too = this.pattern.nodes[edges[i][1]].z;
+        var from = this.activeNodes[edges[i][0]].z;
+        var too = this.activeNodes[edges[i][1]].z;
         zIndex = zIndex + from + too;
     }
     return zIndex / ( edges.length * 2);
