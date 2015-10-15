@@ -244,23 +244,7 @@ Dice.prototype.draw = function(context, x, y){
         }
         
     } 
-    
-    
-    for(var l = 0; l < this.activeNodes.length; l++){
-        context.fillStyle='blue';
-        context.fillRect(x +this.activeNodes[l].x,y +this.activeNodes[l].y, 5, 5);
-        this.writeLabel(context, x +this.activeNodes[l].x, y +this.activeNodes[l].y, "node-"+l);
-    }
-    
-    
-    
 };
-
-Dice.prototype.writeLabel = function (context, x, y, text){
-    context.font = "12px Arial";
-    context.fillStyle = "red";
-    context.fillText(text, x, y);
-}
 
 /**
  * Returns an average zIndex for a side. This allows sides to be organized that sides that are further away are rendered first avoiding overlapping

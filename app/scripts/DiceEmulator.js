@@ -127,7 +127,6 @@ DiceEmulator.prototype.removeDice = function(){
 DiceEmulator.prototype.adjustForCanvasResize = function(){
     var parentWidth = this.target.offsetWidth;
     this.canvas.width = parentWidth;
-    this.splashScreen();
 }
 
 /**
